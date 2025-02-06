@@ -1,5 +1,5 @@
 
-# **Civil Company Management **
+# **Civil Company Management System**
 
 ## **Overview**
 The **Civil Company Management System** is a full-stack web application designed to streamline project management, team collaboration, and customer communication for civil engineering and construction companies. The application provides role-based access, allowing **CEOs**, **Team Leaders (TLs)**, and **Customers** to manage and track projects efficiently. Guests can also view the company's past projects and learn more about the organization.
