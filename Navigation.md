@@ -1,5 +1,7 @@
 # **Navigation Documentation**
 
+# **FIGMA URL:** 'https://www.figma.com/proto/5wLZJC1HA6EZC60et8Qg7g/Madhan?node-id=0-1&t=PiEGiMmtzSMFrg2k-1'
+
 ## **Pages Overview**
 The application consists of the following pages:
 1. **Home**
