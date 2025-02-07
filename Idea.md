@@ -1,4 +1,4 @@
-# Idea.md
+# Idea.md V1.1.0
 
 ## Concept Overview
 This project is a web-based application designed to streamline project management by allowing users to view, track, and manage projects based on their roles. The system categorizes users into **CEO, Team Leader (TL), Customer, and Guest**, with varying levels of access and permissions.
