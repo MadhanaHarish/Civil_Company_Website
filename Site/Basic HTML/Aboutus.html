@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Navigation Bar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: url('https://acp-assets.sfo3.cdn.digitaloceanspaces.com/assets/images/article_images/945393A9-5118-4C9D-9663-9FD726AFFF52.webp') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+<!-- Navigation Bar -->
+<nav class="fixed top-0 left-0 right-0 backdrop-blur-am border-b border-gray-200 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Logo -->
+            <div class="flex-shrink-0">
+                <a href="/" class="text-xl font-semibold text-gray-900 hover:text-gray-700 transition-colors">
+                    Logo
+                </a>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="./HomePage.html" class="text-gray-600 hover:text-gray-900 transition-colors px-3 py-2 text-sm font-medium ">
+                    Home
+                </a>
+                <a href="./Aboutus.html"
+                   class="text-gray-900 transition-colors px-3 py-2 text-sm font-medium">
+                    About Us
+                </a>
+                <a href="/projects"
+                   class="text-gray-600 hover:text-gray-900 transition-colors px-3 py-2 text-sm font-medium">
+                    Projects
+                </a>
+                <a href="/my-projects"
+                   class="text-gray-600 hover:text-gray-900 transition-colors px-3 py-2 text-sm font-medium">
+                    My Projects
+                </a>
+                <button class="ml-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors px-4 py-2 rounded-md text-sm font-medium">
+                    Login
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden">
+                <button class="text-gray-600 hover:text-gray-900 p-2" onclick="toggleMobileMenu()">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <a href="./HomePage.html" class="block text-gray-600 hover:text-gray-900 px-3 py-2 text-base font-medium">
+                Home
+            </a>
+            <a href="./Aboutus.html" class="block text-gray-600 hover:text-gray-900 px-3 py-2 text-base font-medium">
+                About Us
+            </a>
+            <a href="/projects" class="block text-gray-600 hover:text-gray-900 px-3 py-2 text-base font-medium">
+                Projects
+            </a>
+            <a href="/my-projects" class="block text-gray-600 hover:text-gray-900 px-3 py-2 text-base font-medium">
+                My Projects
+            </a>
+            <button class="w-full mt-4 bg-gray-900 text-white hover:bg-gray-800 px-4 py-2 rounded-md text-base font-medium">
+                Login
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Content -->
+<div class="pt-16 flex items-center justify-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to Your Website</h1>
+        <p class="text-xl text-gray-600">Start building your amazing project here!</p>
+    </div>
+</div>
+
+<script>
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenu.classList.toggle('hidden');
+    }
+</script>
+</body>
+</html>
