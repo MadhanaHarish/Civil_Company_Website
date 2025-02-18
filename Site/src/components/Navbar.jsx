@@ -1,10 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     const toggleMobileMenu = () => {
         const mobileMenu = document.getElementById('mobileMenu');
         mobileMenu.classList.toggle('hidden');
+    };
+
+    const handleLogout = () => {
+        setIsLoggedIn(false);
     };
 
     return (
@@ -29,9 +33,15 @@ const Navbar = () => {
                         <Link to="/my-projects" className="text-gray-600 hover:text-gray-900 transition-colors px-3 py-2 text-sm font-medium">
                             My Projects
                         </Link>
-                        <Link to="/login" className="ml-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors px-4 py-2 rounded-md text-sm font-medium">
-                            Login
-                        </Link>
+                        {isLoggedIn ? (
+                            <button onClick={handleLogout} className="ml-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors px-4 py-2 rounded-md text-sm font-medium">
+                                Logout
+                            </button>
+                        ) : (
+                            <Link to="/login" className="ml-4 bg-gray-900 text-white hover:bg-gray-800 transition-colors px-4 py-2 rounded-md text-sm font-medium">
+                                Login
+                            </Link>
+                        )}
                     </div>
                     <div className="md:hidden">
                         <button className="text-gray-600 hover:text-gray-900 p-2" onClick={toggleMobileMenu}>
@@ -56,9 +66,15 @@ const Navbar = () => {
                     <Link to="/my-projects" className="block text-gray-600 hover:text-gray-900 px-3 py-2 text-base font-medium">
                         My Projects
                     </Link>
-                    <Link to="/login" className="w-full mt-4 bg-gray-900 text-white hover:bg-gray-800 px-4 py-2 rounded-md text-base font-medium">
-                        Login
-                    </Link>
+                    {isLoggedIn ? (
+                        <button onClick={handleLogout} className="w-full mt-4 bg-gray-900 text-white hover:bg-gray-800 px-4 py-2 rounded-md text-base font-medium">
+                            Logout
+                        </button>
+                    ) : (
+                        <Link to="/login" className="w-full mt-4 bg-gray-900 text-white hover:bg-gray-800 px-4 py-2 rounded-md text-base font-medium">
+                            Login
+                        </Link>
+                    )}
                 </div>
             </div>
         </nav>
