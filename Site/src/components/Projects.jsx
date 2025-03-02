@@ -1,18 +1,96 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Card from "./Card.jsx";
 
 const Projects = () => {
     const [showForm, setShowForm] = useState(false);
-    const [sections, setSections] = useState([{ heading: "", description: "" }]);
+    const [showDeleteForm, setShowDeleteForm] = useState(false);
+    const [projects, setProjects] = useState([]);
+    const [formData, setFormData] = useState({
+        title: "",
+        location: "",
+        type: "",
+        tlName: "",
+        description: "",
+        pictures: ""
+    });
+    const [deleteData, setDeleteData] = useState({
+        selectedProject: "",
+        reEnterProjectName: ""
+    });
+    const [message, setMessage] = useState("");
 
-    const handleAddSection = () => {
-        setSections([...sections, { heading: "", description: "" }]);
+    useEffect(() => {
+        const fetchProjects = async () => {
+            try {
+                const response = await axios.get('http://localhost:5000/api/projects');
+                setProjects(response.data);
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+            }
+        };
+
+        fetchProjects();
+    }, []);
+
+    const handleFormChange = (event) => {
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
     };
 
-    const handleInputChange = (index, event) => {
-        const values = [...sections];
-        values[index][event.target.name] = event.target.value;
-        setSections(values);
+    const handleDeleteFormChange = (event) => {
+        const { name, value } = event.target;
+        setDeleteData({ ...deleteData, [name]: value });
+    };
+
+    const handleFormSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:5000/api/projects/add', formData);
+            setProjects([...projects, response.data.project]);
+            setShowForm(false);
+            setFormData({
+                title: "",
+                location: "",
+                type: "",
+                tlName: "",
+                description: "",
+                pictures: ""
+            });
+            setMessage("Project added successfully!");
+        } catch (error) {
+            setMessage(`Error adding project: ${error.response?.data?.message || error.message}`);
+        }
+    };
+
+    const handleDeleteFormSubmit = async (event) => {
+        event.preventDefault();
+        if (deleteData.selectedProject === deleteData.reEnterProjectName) {
+            try {
+                await axios.delete(`http://localhost:5000/api/projects/${deleteData.selectedProject}`);
+                setProjects(projects.filter(project => project.title !== deleteData.selectedProject));
+                setShowDeleteForm(false);
+                setDeleteData({
+                    selectedProject: "",
+                    reEnterProjectName: ""
+                });
+                setMessage("Project deleted successfully!");
+            } catch (error) {
+                setMessage(`Error deleting project: ${error.response?.data?.message || error.message}`);
+            }
+        } else {
+            setMessage("Project names do not match. Please try again.");
+        }
+    };
+
+    const toggleForm = () => {
+        setShowForm(!showForm);
+        setMessage("");
+    };
+
+    const toggleDeleteForm = () => {
+        setShowDeleteForm(!showDeleteForm);
+        setMessage("");
     };
 
     return (
@@ -52,65 +130,88 @@ const Projects = () => {
                             </button>
                             <button
                                 className="p-2.5 m-2 text-sm font-medium text-white bg-green-700 rounded-lg border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                                onClick={() => setShowForm(true)}
+                                onClick={toggleForm}
                             >
-                                Add Project
+                                {showForm ? "Hide Form" : "Add Project"}
+                            </button>
+                            <button
+                                className="p-2.5 m-2 text-sm font-medium text-white bg-red-700 rounded-lg border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                                onClick={toggleDeleteForm}
+                            >
+                                {showDeleteForm ? "Hide Delete Form" : "Delete Project"}
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+            {message && (
+                <div className="mt-4 text-center">
+                    <p className={`text-sm ${message.includes("Error") ? "text-red-500" : "text-green-500"}`}>{message}</p>
+                </div>
+            )}
             {showForm && (
-                <div className="mt-10 p-4 bg-white rounded-lg shadow-md">
+                <div className="mt-10 p-4 bg-white rounded-lg shadow-md mb-4">
                     <h2 className="text-xl font-bold mb-4">Add New Project</h2>
-                    <form>
+                    <form onSubmit={handleFormSubmit}>
                         <div className="mb-4">
                             <label className="block text-gray-700">Project Title</label>
-                            <input type="text" className="w-full border border-gray-300 p-2 rounded" />
+                            <input
+                                type="text"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleFormChange}
+                                className="w-full border border-gray-300 p-2 rounded"
+                            />
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700">Location</label>
-                            <input type="text" className="w-full border border-gray-300 p-2 rounded" />
+                            <input
+                                type="text"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleFormChange}
+                                className="w-full border border-gray-300 p-2 rounded"
+                            />
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700">Project Type</label>
-                            <input type="text" className="w-full border border-gray-300 p-2 rounded" />
+                            <input
+                                type="text"
+                                name="type"
+                                value={formData.type}
+                                onChange={handleFormChange}
+                                className="w-full border border-gray-300 p-2 rounded"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700">TL Name</label>
+                            <input
+                                type="text"
+                                name="tlName"
+                                value={formData.tlName}
+                                onChange={handleFormChange}
+                                className="w-full border border-gray-300 p-2 rounded"
+                            />
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700">Description</label>
-                            <textarea className="w-full border border-gray-300 p-2 rounded"></textarea>
+                            <textarea
+                                name="description"
+                                value={formData.description}
+                                onChange={handleFormChange}
+                                className="w-full border border-gray-300 p-2 rounded"
+                            ></textarea>
                         </div>
                         <div className="mb-4">
-                            <label className="block text-gray-700">Pictures</label>
-                            <input type="file" className="w-full border border-gray-300 p-2 rounded" multiple />
+                            <label className="block text-gray-700">Pictures URL</label>
+                            <input
+                                type="text"
+                                name="pictures"
+                                value={formData.pictures}
+                                onChange={handleFormChange}
+                                className="w-full border border-gray-300 p-2 rounded"
+                            />
                         </div>
-                        {sections.map((section, index) => (
-                            <div key={index} className="mb-4">
-                                <label className="block text-gray-700">Section {index + 1}</label>
-                                <input
-                                    type="text"
-                                    name="heading"
-                                    value={section.heading}
-                                    onChange={(event) => handleInputChange(index, event)}
-                                    className="w-full border border-gray-300 p-2 rounded mb-2"
-                                    placeholder="Heading"
-                                />
-                                <textarea
-                                    name="description"
-                                    value={section.description}
-                                    onChange={(event) => handleInputChange(index, event)}
-                                    className="w-full border border-gray-300 p-2 rounded"
-                                    placeholder="Description"
-                                ></textarea>
-                            </div>
-                        ))}
-                        <button
-                            type="button"
-                            onClick={handleAddSection}
-                            className="p-2.5 m-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300"
-                        >
-                            Add Section
-                        </button>
                         <button
                             type="submit"
                             className="p-2.5 m-2 text-sm font-medium text-white bg-green-700 rounded-lg border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300"
@@ -120,11 +221,52 @@ const Projects = () => {
                     </form>
                 </div>
             )}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                {[...Array(10)].map((_, index) => (
-                    <Card key={index} />
-                ))}
-            </div>
+            {showDeleteForm && (
+                <div className="mt-10 p-4 bg-white rounded-lg shadow-md mb-4">
+                    <h2 className="text-xl font-bold mb-4">Delete Project</h2>
+                    <form onSubmit={handleDeleteFormSubmit}>
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Select Project</label>
+                            <select
+                                name="selectedProject"
+                                value={deleteData.selectedProject}
+                                onChange={handleDeleteFormChange}
+                                className="w-full border border-gray-300 p-2 rounded"
+                            >
+                                <option value="">Select a project</option>
+                                {projects.map((project) => (
+                                    <option key={project._id} value={project.title}>
+                                        {project.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700">Re-enter Project Name</label>
+                            <input
+                                type="text"
+                                name="reEnterProjectName"
+                                value={deleteData.reEnterProjectName}
+                                onChange={handleDeleteFormChange}
+                                className="w-full border border-gray-300 p-2 rounded"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="p-2.5 m-2 text-sm font-medium text-white bg-red-700 rounded-lg border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300"
+                        >
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            )}
+            {!showForm && !showDeleteForm && (
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    {projects.map((project, index) => (
+                        <Card key={index} project={project} />
+                    ))}
+                </div>
+            )}
         </>
     );
 };

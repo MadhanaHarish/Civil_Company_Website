@@ -1,0 +1,41 @@
+const express = require('express');
+const Project = require('../models/Project');
+const router = express.Router();
+
+// Create a new project
+router.post('/add', async (req, res) => {
+    const { title, location, type, tlName, description, pictures } = req.body;
+
+    try {
+        const newProject = new Project({ title, location, type, tlName, description, pictures });
+        await newProject.save();
+        res.status(201).json({ message: 'Project added successfully', project: newProject });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+// Get all projects
+router.get('/', async (req, res) => {
+    try {
+        const projects = await Project.find();
+        res.status(200).json(projects);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.delete('/:title', async (req, res) => {
+    const { title } = req.params;
+
+    try {
+        const project = await Project.findOneAndDelete({ title });
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found' });
+        }
+        res.status(200).json({ message: 'Project deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+module.exports = router;

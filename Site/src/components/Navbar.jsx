@@ -17,7 +17,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                 <div className="flex items-center justify-between h-16">
                     <div className="flex-shrink-0">
                         <Link to="/" className="text-xl font-semibold text-gray-900 hover:text-gray-700 transition-colors">
-                            Civil Company Management
+                            The Landmark Projects
                         </Link>
                     </div>
                     <div className="hidden md:flex items-center space-x-8">
