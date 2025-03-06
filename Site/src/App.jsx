@@ -7,6 +7,7 @@ import Projects from './components/Projects';
 import MyProjects from './components/MyProjects';
 import Login from './components/Login';
 import Register from './components/Register';
+import ProjectDetails from "./components/ProjectDetails.jsx";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,6 +23,7 @@ const App = () => {
                     <Route path="/my-projects" element={isLoggedIn ? <MyProjects /> : <Navigate to="/login" />} />
                     <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/projects/:id" element={<ProjectDetails/>} />
                 </Routes>
             </div>
         </Router>
