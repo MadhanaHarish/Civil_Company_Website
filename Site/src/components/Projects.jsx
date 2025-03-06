@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "./Card.jsx";
+import AddProject from "./AddProject.jsx";
+import DeletProject from "./DeletProject.jsx";
+import FilterPopup from "./FilterPopup.jsx";
 
 const Projects = () => {
     const [showForm, setShowForm] = useState(false);
@@ -19,6 +22,9 @@ const Projects = () => {
         reEnterProjectName: ""
     });
     const [message, setMessage] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [showFilterPopup, setShowFilterPopup] = useState(false); // State to show/hide the filter popup
+    const [filteredDistricts, setFilteredDistricts] = useState([]);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -36,6 +42,11 @@ const Projects = () => {
     const handleFormChange = (event) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
+    };
+
+    const handleFilter = (selectedDistricts) => {
+        setFilteredDistricts(selectedDistricts);
+        setShowFilterPopup(false);
     };
 
     const handleDeleteFormChange = (event) => {
@@ -93,6 +104,15 @@ const Projects = () => {
         setMessage("");
     };
 
+    const handleSearch = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const filteredProjects = projects.filter(project =>
+        project.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (filteredDistricts.length === 0 || filteredDistricts.includes(project.location))
+    );
+
     return (
         <>
             <div className="mt-20">
@@ -102,7 +122,9 @@ const Projects = () => {
                             <input
                                 type="text"
                                 className="w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md pr-12 pl-4 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                                placeholder="Coimbatore..."
+                                placeholder="Search projects..."
+                                value={searchQuery}
+                                onChange={handleSearch}
                             />
                             <button
                                 className="absolute right-1 top-1 rounded bg-slate-800 p-1.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -125,6 +147,7 @@ const Projects = () => {
                         <div className="flex space-x-4">
                             <button
                                 className="p-2.5 m-2 text-sm font-medium text-white bg-gray-700 rounded-lg border border-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+                                onClick={() => setShowFilterPopup(true)}
                             >
                                 Filters
                             </button>
@@ -150,123 +173,34 @@ const Projects = () => {
                 </div>
             )}
             {showForm && (
-                <div className="mt-10 p-4 bg-white rounded-lg shadow-md mb-4">
-                    <h2 className="text-xl font-bold mb-4">Add New Project</h2>
-                    <form onSubmit={handleFormSubmit}>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Project Title</label>
-                            <input
-                                type="text"
-                                name="title"
-                                value={formData.title}
-                                onChange={handleFormChange}
-                                className="w-full border border-gray-300 p-2 rounded"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Location</label>
-                            <input
-                                type="text"
-                                name="location"
-                                value={formData.location}
-                                onChange={handleFormChange}
-                                className="w-full border border-gray-300 p-2 rounded"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Project Type</label>
-                            <input
-                                type="text"
-                                name="type"
-                                value={formData.type}
-                                onChange={handleFormChange}
-                                className="w-full border border-gray-300 p-2 rounded"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">TL Name</label>
-                            <input
-                                type="text"
-                                name="tlName"
-                                value={formData.tlName}
-                                onChange={handleFormChange}
-                                className="w-full border border-gray-300 p-2 rounded"
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Description</label>
-                            <textarea
-                                name="description"
-                                value={formData.description}
-                                onChange={handleFormChange}
-                                className="w-full border border-gray-300 p-2 rounded"
-                            ></textarea>
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Pictures URL</label>
-                            <input
-                                type="text"
-                                name="pictures"
-                                value={formData.pictures}
-                                onChange={handleFormChange}
-                                className="w-full border border-gray-300 p-2 rounded"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="p-2.5 m-2 text-sm font-medium text-white bg-green-700 rounded-lg border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300"
-                        >
-                            Submit
-                        </button>
-                    </form>
-                </div>
+                <AddProject
+                    handleFormSubmit={handleFormSubmit}
+                    handleFormChange={handleFormChange}
+                    formData={formData}
+                />
             )}
             {showDeleteForm && (
-                <div className="mt-10 p-4 bg-white rounded-lg shadow-md mb-4">
-                    <h2 className="text-xl font-bold mb-4">Delete Project</h2>
-                    <form onSubmit={handleDeleteFormSubmit}>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Select Project</label>
-                            <select
-                                name="selectedProject"
-                                value={deleteData.selectedProject}
-                                onChange={handleDeleteFormChange}
-                                className="w-full border border-gray-300 p-2 rounded"
-                            >
-                                <option value="">Select a project</option>
-                                {projects.map((project) => (
-                                    <option key={project._id} value={project.title}>
-                                        {project.title}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Re-enter Project Name</label>
-                            <input
-                                type="text"
-                                name="reEnterProjectName"
-                                value={deleteData.reEnterProjectName}
-                                onChange={handleDeleteFormChange}
-                                className="w-full border border-gray-300 p-2 rounded"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            className="p-2.5 m-2 text-sm font-medium text-white bg-red-700 rounded-lg border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300"
-                        >
-                            Delete
-                        </button>
-                    </form>
-                </div>
+                <DeletProject
+                    handleDeleteFormChange={handleDeleteFormChange}
+                    handleDeleteFormSubmit={handleDeleteFormSubmit}
+                    deleteData={deleteData}
+                    projects={projects}
+                />
             )}
             {!showForm && !showDeleteForm && (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {projects.map((project, index) => (
-                        <Card key={index} project={project} />
-                    ))}
+                    {filteredProjects.length > 0 ? (
+                        filteredProjects.map((project, index) => (
+                            <Card key={index} project={project} />
+                        ))
+                    ) : (
+                        <div className="flex items-center justify-center w-full h-full">
+                            <h1 className="text-center text-gray-500">No projects found.</h1>
+                        </div>
+                    )}
                 </div>
             )}
+            {showFilterPopup && <FilterPopup onFilter={handleFilter} />}
         </>
     );
 };
