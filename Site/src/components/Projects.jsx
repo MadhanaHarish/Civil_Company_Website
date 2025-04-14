@@ -5,6 +5,13 @@ import AddProject from "./AddProject.jsx";
 import DeletProject from "./DeletProject.jsx";
 import FilterPopup from "./FilterPopup.jsx";
 
+const districts = [
+    "Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri", "Dindigul", "Erode", "Kallakurichi", "Kancheepuram",
+    "Karur", "Krishnagiri", "Madurai", "Nagapattinam", "Namakkal", "Nilgiris", "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet",
+    "Salem", "Sivaganga", "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli", "Tirunelveli", "Tirupattur", "Tiruppur",
+    "Tiruvallur", "Tiruvannamalai", "Tiruvarur", "Vellore", "Viluppuram", "Virudhunagar"
+];
+
 const Projects = () => {
     const [showForm, setShowForm] = useState(false);
     const [showDeleteForm, setShowDeleteForm] = useState(false);
@@ -25,6 +32,7 @@ const Projects = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [showFilterPopup, setShowFilterPopup] = useState(false); // State to show/hide the filter popup
     const [filteredDistricts, setFilteredDistricts] = useState([]);
+    const [filteredTeamLeads, setFilteredTeamLeads] = useState([]); // Added state for team leads
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -44,8 +52,9 @@ const Projects = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleFilter = (selectedDistricts) => {
-        setFilteredDistricts(selectedDistricts);
+    const handleFilter = (selectedDistricts, selectedTeamLeads) => {
+        setFilteredDistricts(selectedDistricts || []); // Ensure default empty array
+        setFilteredTeamLeads(selectedTeamLeads || []); // Ensure default empty array
         setShowFilterPopup(false);
     };
 
@@ -110,8 +119,12 @@ const Projects = () => {
 
     const filteredProjects = projects.filter(project =>
         project.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (filteredDistricts.length === 0 || filteredDistricts.includes(project.location))
+        (filteredDistricts.length === 0 || filteredDistricts.includes(project.location)) &&
+        (filteredTeamLeads.length === 0 || filteredTeamLeads.some(tl => tl === project.tlName)) // Correct team lead filtering
     );
+
+    const liveProjects = filteredProjects.filter(project => project.status === "Live");
+    const completedProjects = filteredProjects.filter(project => project.status === "Completed");
 
     return (
         <>
@@ -188,21 +201,47 @@ const Projects = () => {
                 />
             )}
             {!showForm && !showDeleteForm && (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {filteredProjects.length > 0 ? (
-                        filteredProjects.map((project, index) => (
-                            <Card key={index} project={project} />
-                        ))
-                    ) : (
-                        <div className="flex items-center justify-center w-full h-full">
-                            <h1 className="text-center text-gray-500">No projects found.</h1>
+                <div className="space-y-8">
+                    <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4">Live Projects</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {liveProjects.length > 0 ? (
+                                liveProjects.map((project, index) => (
+                                    <Card key={index} project={project} />
+                                ))
+                            ) : (
+                                <div className="flex items-center justify-center w-full h-full">
+                                    <h1 className="text-center text-gray-500">No live projects found.</h1>
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4">Completed Projects</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {completedProjects.length > 0 ? (
+                                completedProjects.map((project, index) => (
+                                    <Card key={index} project={project} />
+                                ))
+                            ) : (
+                                <div className="flex items-center justify-center w-full h-full">
+                                    <h1 className="text-center text-gray-500">No completed projects found.</h1>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
-            {showFilterPopup && <FilterPopup onFilter={handleFilter} />}
+            {showFilterPopup && (
+                <FilterPopup
+                    onFilter={handleFilter}
+                    allDistricts={districts} // Use predefined districts
+                    allTeamLeads={projects.map(project => project.tlName)} // Pass all team leads
+                />
+            )}
         </>
     );
 };
 
 export default Projects;
+

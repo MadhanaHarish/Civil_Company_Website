@@ -6,9 +6,12 @@ const projectSchema = new mongoose.Schema({
     type: { type: String, required: true },
     tlName: { type: String, required: true },
     description: { type: String, required: true },
-    pictures: { type: [String], required: true }
+    pictures: { type: [String], required: true },
+    status: { type: String, required: true, enum: ['Live', 'Completed'] },
+    customerEmail: { type: String, required: true }
 });
 
 const Project = mongoose.model('Project', projectSchema);
 
 module.exports = Project;
+
