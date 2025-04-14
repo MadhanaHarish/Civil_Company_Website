@@ -78,6 +78,29 @@ const AddProject = ({ handleFormSubmit, handleFormChange, formData }) => {
                             className="w-full border border-gray-300 p-2 rounded"
                         />
                     </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700">Customer Email</label>
+                        <input
+                            type="email"
+                            name="customerEmail"
+                            value={formData.customerEmail}
+                            onChange={handleFormChange}
+                            className="w-full border border-gray-300 p-2 rounded"
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700">Status</label>
+                        <select
+                            name="status"
+                            value={formData.status}
+                            onChange={handleFormChange}
+                            className="w-full border border-gray-300 p-2 rounded"
+                        >
+                            <option value="">Select status</option>
+                            <option value="Live">Live</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
                     <button
                         type="submit"
                         className="p-2.5 m-2 text-sm font-medium text-white bg-green-700 rounded-lg border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300"
@@ -91,3 +114,4 @@ const AddProject = ({ handleFormSubmit, handleFormChange, formData }) => {
 }
 
 export default AddProject;
+
