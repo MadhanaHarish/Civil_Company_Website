@@ -12,7 +12,7 @@ const districts = [
     "Tiruvallur", "Tiruvannamalai", "Tiruvarur", "Vellore", "Viluppuram", "Virudhunagar"
 ];
 
-const Projects = () => {
+const Projects = ({isLoggedIn, loggedInRole}) => {
     const [showForm, setShowForm] = useState(false);
     const [showDeleteForm, setShowDeleteForm] = useState(false);
     const [projects, setProjects] = useState([]);
@@ -21,6 +21,7 @@ const Projects = () => {
         location: "",
         type: "",
         tlName: "",
+        tlEmail: "",
         description: "",
         pictures: ""
     });
@@ -43,7 +44,6 @@ const Projects = () => {
                 console.error('Error fetching projects:', error);
             }
         };
-
         fetchProjects();
     }, []);
 
@@ -65,6 +65,7 @@ const Projects = () => {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();
+        console.log("Form Data:", formData); // Debugging: Log form data before submission
         try {
             const response = await axios.post('http://localhost:5000/api/projects/add', formData);
             setProjects([...projects, response.data.project]);
@@ -74,11 +75,15 @@ const Projects = () => {
                 location: "",
                 type: "",
                 tlName: "",
+                tlEmail: "",
                 description: "",
-                pictures: ""
+                pictures: "",
+                status: "",
+                customerEmail: ""
             });
             setMessage("Project added successfully!");
         } catch (error) {
+            console.error("Error adding project:", error.response?.data || error.message);
             setMessage(`Error adding project: ${error.response?.data?.message || error.message}`);
         }
     };
@@ -118,9 +123,11 @@ const Projects = () => {
     };
 
     const filteredProjects = projects.filter(project =>
-        project.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            project.tlName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            project.location.toLowerCase().includes(searchQuery.toLowerCase())) &&
         (filteredDistricts.length === 0 || filteredDistricts.includes(project.location)) &&
-        (filteredTeamLeads.length === 0 || filteredTeamLeads.some(tl => tl === project.tlName)) // Correct team lead filtering
+        (filteredTeamLeads.length === 0 || filteredTeamLeads.some(tl => tl === project.tlName))
     );
 
     const liveProjects = filteredProjects.filter(project => project.status === "Live");
@@ -164,18 +171,23 @@ const Projects = () => {
                             >
                                 Filters
                             </button>
-                            <button
-                                className="p-2.5 m-2 text-sm font-medium text-white bg-green-700 rounded-lg border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-                                onClick={toggleForm}
-                            >
-                                {showForm ? "Hide Form" : "Add Project"}
-                            </button>
-                            <button
-                                className="p-2.5 m-2 text-sm font-medium text-white bg-red-700 rounded-lg border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-                                onClick={toggleDeleteForm}
-                            >
-                                {showDeleteForm ? "Hide Delete Form" : "Delete Project"}
-                            </button>
+                            {/* Show Add/Delete buttons only for CEO */}
+                            {loggedInRole === 'CEO' && (
+                                <>
+                                    <button
+                                        className="p-2.5 m-2 text-sm font-medium text-white bg-green-700 rounded-lg border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                                        onClick={toggleForm}
+                                    >
+                                        {showForm ? "Hide Form" : "Add Project"}
+                                    </button>
+                                    <button
+                                        className="p-2.5 m-2 text-sm font-medium text-white bg-red-700 rounded-lg border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                                        onClick={toggleDeleteForm}
+                                    >
+                                        {showDeleteForm ? "Hide Delete Form" : "Delete Project"}
+                                    </button>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -207,7 +219,7 @@ const Projects = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                             {liveProjects.length > 0 ? (
                                 liveProjects.map((project, index) => (
-                                    <Card key={index} project={project} />
+                                    <Card key={index} project={project} isLoggedIn={isLoggedIn} />
                                 ))
                             ) : (
                                 <div className="flex items-center justify-center w-full h-full">

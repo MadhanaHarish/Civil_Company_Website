@@ -4,10 +4,14 @@ const router = express.Router();
 
 // Create a new project
 router.post('/add', async (req, res) => {
-    const { title, location, type, tlName, description, pictures, status, customerEmail } = req.body;
+    const { title, location, type, tlName, tlEmail, description, pictures, status, customerEmail } = req.body;
+
+    if (!title || !location || !type || !tlName || !tlEmail || !description || !pictures || !status || !customerEmail) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
 
     try {
-        const newProject = new Project({ title, location, type, tlName, description, pictures, status, customerEmail });
+        const newProject = new Project({ title, location, type, tlName, tlEmail, description, pictures, status, customerEmail });
         await newProject.save();
         res.status(201).json({ message: 'Project added successfully', project: newProject });
     } catch (error) {
@@ -41,13 +45,13 @@ router.get('/:id', async (req, res) => {
 // Update a project by ID
 router.put('/:id', async (req, res) => {
     const { id } = req.params;
-    const { title, location, type, tlName, description, pictures, status, customerEmail } = req.body;
+    const { title, location, type, tlName, tlEmail, description, pictures, status, customerEmail } = req.body;
 
     try {
         const updatedProject = await Project.findByIdAndUpdate(
             id,
-            { title, location, type, tlName, description, pictures, status, customerEmail },
-            { new: true, runValidators: true }
+            { title, location, type, tlName, tlEmail, description, pictures, status, customerEmail },
+            { new: true, runValidators: true } // Return the updated document and validate the fields
         );
         if (!updatedProject) {
             return res.status(404).json({ message: 'Project not found' });

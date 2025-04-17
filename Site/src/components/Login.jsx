@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = ({ setIsLoggedIn, setLoggedInEmail, setLoggedInRole}) => {
     const [formData, setFormData] = useState({
         username: "",
         password: ""
@@ -30,6 +30,8 @@ const Login = ({ setIsLoggedIn }) => {
             const response = await axios.post("http://localhost:5000/api/users/login", formData);
             alert(response.data.message);
             setIsLoggedIn(true);
+            setLoggedInEmail(response.data.email);
+            setLoggedInRole(response.data.role);
             navigate("/");
         } catch (error) {
             alert("Error logging in: " + error.response.data.error);
@@ -43,9 +45,10 @@ const Login = ({ setIsLoggedIn }) => {
         const email = profile.getEmail();
 
         try {
-            const response = await axios.post("http://localhost:5000/api/users/google-login", { email });
+            const response = await axios.post("http://localhost:5000/api/users/google-login", {email});
             alert(response.data.message);
             setIsLoggedIn(true);
+            setLoggedInEmail(email); // Set the logged-in email
             navigate("/");
         } catch (error) {
             alert("Error logging in with Google: " + error.response.data.error);
@@ -96,7 +99,8 @@ const Login = ({ setIsLoggedIn }) => {
                 </div>
                 <div className="text-center">
                     <p className="text-gray-700">
-                        Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Click here to register</a>
+                        Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Click here
+                        to register</a>
                     </p>
                 </div>
             </div>

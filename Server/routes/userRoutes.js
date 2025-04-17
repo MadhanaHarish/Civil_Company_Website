@@ -29,7 +29,11 @@ router.post('/login', async (req, res) => {
         const user = await User.findOne({ email: username, password });
         if (user) {
             console.log('User logged in successfully');
-            res.status(200).json({ message: 'User logged in successfully' });
+            res.status(200).json({
+                message: 'User logged in successfully',
+                email: user.email,
+                role: user.role // Include the role in the response
+            });
         } else {
             res.status(400).json({ error: 'Invalid username or password' });
         }
@@ -49,6 +53,15 @@ router.post('/google-login', async (req, res) => {
         } else {
             res.status(400).json({ error: 'No user found with this email' });
         }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/team-leaders', async (req, res) => {
+    try {
+        const teamLeaders = await User.find({ role: 'Team Leader' }, 'fullName email');
+        res.status(200).json(teamLeaders);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
