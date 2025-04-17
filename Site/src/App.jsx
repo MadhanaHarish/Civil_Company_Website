@@ -11,19 +11,27 @@ import ProjectDetails from "./components/ProjectDetails.jsx";
 
 const App = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loggedInEmail, setLoggedInEmail] = useState("");
+    const [loggedInRole, setLoggedInRole] = useState(""); // Add state for role
 
     return (
         <Router>
-            <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+            <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setLoggedInEmail={setLoggedInEmail} setLoggedInRole={setLoggedInRole}/>
             <div className="h-screen p-2">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/about" element={<AboutUs />} />
-                    <Route path="/projects" element={<Projects />} />
-                    <Route path="/my-projects" element={isLoggedIn ? <MyProjects /> : <Navigate to="/login" />} />
-                    <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+                    <Route path="/projects" element={<Projects loggedInRole={loggedInRole} isLoggedIn={isLoggedIn} />} />
+                    <Route
+                        path="/my-projects"
+                        element={isLoggedIn ? <MyProjects loggedInEmail={loggedInEmail} loggedInRole={loggedInRole} /> : <Navigate to="/login" />}
+                    />
+                    <Route
+                        path="/login"
+                        element={<Login setIsLoggedIn={setIsLoggedIn} setLoggedInEmail={setLoggedInEmail} setLoggedInRole={setLoggedInRole} />}
+                    />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/projects/:id" element={<ProjectDetails/>} />
+                    <Route path="/projects/:id" element={<ProjectDetails loggedInRole={loggedInRole}/>} />
                 </Routes>
             </div>
         </Router>

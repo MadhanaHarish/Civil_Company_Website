@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
+const Navbar = ({ isLoggedIn, setIsLoggedIn, setLoggedInEmail, setLoggedInRole }) => {
     const toggleMobileMenu = () => {
         const mobileMenu = document.getElementById('mobileMenu');
         mobileMenu.classList.toggle('hidden');
@@ -9,6 +9,8 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
     const handleLogout = () => {
         setIsLoggedIn(false);
+        setLoggedInEmail("");
+        setLoggedInRole("");
     };
 
     return (

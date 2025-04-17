@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const ProjectDetails = () => {
+const ProjectDetails = ({ loggedInRole }) => {
     const { id } = useParams();
     const [project, setProject] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -12,7 +12,9 @@ const ProjectDetails = () => {
         location: "",
         type: "",
         tlName: "",
-        status: "", // Added status field
+        tlEmail: "",
+        pictures: [],
+        status: "",
         customerEmail: "",
     });
 
@@ -27,7 +29,9 @@ const ProjectDetails = () => {
                     location: response.data.location,
                     type: response.data.type,
                     tlName: response.data.tlName,
-                    status: response.data.status, // Added status field
+                    tlEmail: response.data.tlEmail,
+                    pictures: response.data.pictures.join(", "),
+                    status: response.data.status,
                     customerEmail: response.data.customerEmail,
                 });
             } catch (error) {
@@ -46,8 +50,12 @@ const ProjectDetails = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:5000/api/projects/${id}`, formData);
-            setProject(response.data.project); // Update the project state with the updated data
+            const updatedData = {
+                ...formData,
+                pictures: formData.pictures.split(",").map((pic) => pic.trim()),
+            };
+            const response = await axios.put(`http://localhost:5000/api/projects/${id}`, updatedData);
+            setProject(response.data.project);
             setIsEditing(false);
         } catch (error) {
             console.error("Error updating project:", error);
@@ -62,55 +70,89 @@ const ProjectDetails = () => {
         <div className="flex flex-col items-center mt-20 p-6 w-full max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
             {isEditing ? (
                 <form onSubmit={handleUpdate} className="w-full">
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Project Title</label>
-                        <input
-                            type="text"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 p-2 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Description</label>
-                        <textarea
-                            name="description"
-                            value={formData.description}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 p-2 rounded"
-                        ></textarea>
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Location</label>
-                        <input
-                            type="text"
-                            name="location"
-                            value={formData.location}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 p-2 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Type</label>
-                        <input
-                            type="text"
-                            name="type"
-                            value={formData.type}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 p-2 rounded"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Team Leader</label>
-                        <input
-                            type="text"
-                            name="tlName"
-                            value={formData.tlName}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 p-2 rounded"
-                        />
-                    </div>
+                    {loggedInRole === "CEO" && (
+                        <>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Project Title</label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    value={formData.title}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 p-2 rounded"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Description</label>
+                                <textarea
+                                    name="description"
+                                    value={formData.description}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 p-2 rounded"
+                                ></textarea>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Location</label>
+                                <input
+                                    type="text"
+                                    name="location"
+                                    value={formData.location}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 p-2 rounded"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Type</label>
+                                <input
+                                    type="text"
+                                    name="type"
+                                    value={formData.type}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 p-2 rounded"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Team Leader</label>
+                                <input
+                                    type="text"
+                                    name="tlName"
+                                    value={formData.tlName}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 p-2 rounded"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Team Leader Email</label>
+                                <input
+                                    type="email"
+                                    name="tlEmail"
+                                    value={formData.tlEmail}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 p-2 rounded"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Pictures (comma-separated URLs)</label>
+                                <input
+                                    type="text"
+                                    name="pictures"
+                                    value={formData.pictures}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 p-2 rounded"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700">Customer Email</label>
+                                <input
+                                    type="email"
+                                    name="customerEmail"
+                                    value={formData.customerEmail}
+                                    onChange={handleInputChange}
+                                    className="w-full border border-gray-300 p-2 rounded"
+                                />
+                            </div>
+                        </>
+                    )}
                     <div className="mb-4">
                         <label className="block text-gray-700">Status</label>
                         <select
@@ -123,16 +165,6 @@ const ProjectDetails = () => {
                             <option value="Live">Live</option>
                             <option value="Completed">Completed</option>
                         </select>
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Customer Email</label>
-                        <input
-                            type="email"
-                            name="customerEmail"
-                            value={formData.customerEmail}
-                            onChange={handleInputChange}
-                            className="w-full border border-gray-300 p-2 rounded"
-                        />
                     </div>
                     <button
                         type="submit"
@@ -155,15 +187,19 @@ const ProjectDetails = () => {
                             <p className="bg-gray-100 p-3 rounded-lg"><strong>Location:</strong> {project.location}</p>
                             <p className="bg-gray-100 p-3 rounded-lg"><strong>Type:</strong> {project.type}</p>
                             <p className="bg-gray-100 p-3 rounded-lg"><strong>Team Leader:</strong> {project.tlName}</p>
-                            <p className="bg-gray-100 p-3 rounded-lg"><strong>Status:</strong> {project.status}</p> {/* Added status field */}
+                            <p className="bg-gray-100 p-3 rounded-lg"><strong>Team Leader Email:</strong> {project.tlEmail}</p>
+                            <p className="bg-gray-100 p-3 rounded-lg"><strong>Status:</strong> {project.status}</p>
+                            <p className="bg-gray-100 p-3 rounded-lg"><strong>Customer Email:</strong> {project.customerEmail}</p>
                         </div>
                     </div>
-                    <button
-                        onClick={() => setIsEditing(true)}
-                        className="mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg transition"
-                    >
-                        Update
-                    </button>
+                    {(loggedInRole === "CEO" || loggedInRole === "Team Leader") && (
+                        <button
+                            onClick={() => setIsEditing(true)}
+                            className="mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-6 rounded-lg transition"
+                        >
+                            Update
+                        </button>
+                    )}
                 </>
             )}
         </div>
@@ -171,4 +207,3 @@ const ProjectDetails = () => {
 };
 
 export default ProjectDetails;
-

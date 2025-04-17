@@ -1,23 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import axios from "axios";
 import Card from "./Card.jsx";
 import FilterPopup from "./FilterPopup.jsx";
 
-const MyProjects = () => {
+const MyProjects = ({ loggedInEmail, loggedInRole}) => {
     const [projects, setProjects] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [showFilterPopup, setShowFilterPopup] = useState(false);
     const [filteredDistricts, setFilteredDistricts] = useState([]);
     const [filteredTeamLeads, setFilteredTeamLeads] = useState([]);
-    const [loggedInEmail, setLoggedInEmail] = useState("");
-
-    useEffect(() => {
-        // Load logged-in email from local storage
-        const email = localStorage.getItem("loggedInEmail");
-        if (email) {
-            setLoggedInEmail(email);
-        }
-    }, []);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -28,7 +19,6 @@ const MyProjects = () => {
                 console.error('Error fetching projects:', error);
             }
         };
-
         fetchProjects();
     }, []);
 
@@ -56,7 +46,8 @@ const MyProjects = () => {
         <>
             <div className="mt-20">
                 <div className="text-center">
-                    <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative">
+                    <div
+                        className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative">
                         <span className="w-full sm:w-auto relative">
                             <input
                                 type="text"
@@ -98,7 +89,7 @@ const MyProjects = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                         {liveProjects.length > 0 ? (
                             liveProjects.map((project, index) => (
-                                <Card key={index} project={project} />
+                                <Card key={index} project={project}/>
                             ))
                         ) : (
                             <div className="flex items-center justify-center w-full h-full">
@@ -112,7 +103,7 @@ const MyProjects = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                         {completedProjects.length > 0 ? (
                             completedProjects.map((project, index) => (
-                                <Card key={index} project={project} />
+                                <Card key={index} project={project}/>
                             ))
                         ) : (
                             <div className="flex items-center justify-center w-full h-full">
@@ -121,6 +112,22 @@ const MyProjects = () => {
                         )}
                     </div>
                 </div>
+                {loggedInRole === "Team Leader" && (
+                    <div>
+                        <h2 className="text-xl font-bold text-gray-800 mb-4">Assigned Projects</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            {completedProjects.length > 0 ? (
+                                completedProjects.map((project, index) => (
+                                    <Card key={index} project={project}/>
+                                ))
+                            ) : (
+                                <div className="flex items-center justify-center w-full h-full">
+                                    <h1 className="text-center text-gray-500">No assigned projects found.</h1>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
             {showFilterPopup && (
                 <FilterPopup
