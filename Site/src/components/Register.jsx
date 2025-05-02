@@ -11,22 +11,101 @@ const Register = () => {
         role: "",
         contactInfo: ""
     });
+    const [validationErrors, setValidationErrors] = useState({
+        fullName: "",
+        email: "",
+        password: "",
+        role: "",
+        contactInfo: ""
+    });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
+    const validateField = (name, value) => {
+        let error = "";
+        
+        switch (name) {
+            case "fullName":
+                if (value.trim().length < 3) {
+                    error = "Full name must be at least 3 characters";
+                } else if (!/^[a-zA-Z\s]+$/.test(value)) {
+                    error = "Full name should contain only letters and spaces";
+                }
+                break;
+            case "email":
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    error = "Please enter a valid email address";
+                }
+                break;
+            case "password":
+                if (value.length < 8) {
+                    error = "Password must be at least 8 characters";
+                } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
+                    error = "Password must contain uppercase, lowercase and number";
+                }
+                break;
+            case "role":
+                if (!value) {
+                    error = "Please select a role";
+                }
+                break;
+            case "contactInfo":
+                if (!/^[0-9]{10,15}$/.test(value)) {
+                    error = "Please enter a valid phone number (10-15 digits)";
+                }
+                break;
+            default:
+                break;
+        }
+        
+        return error;
+    };
+
     const handleChange = (e) => {
+        const { name, value } = e.target;
+        
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [name]: value
         });
         
-        // Clear error when user types
+        // Validate field on change
+        const fieldError = validateField(name, value);
+        setValidationErrors({
+            ...validationErrors,
+            [name]: fieldError
+        });
+        
+        // Clear general error when user types
         if (error) setError("");
+    };
+
+    const validateForm = () => {
+        let formIsValid = true;
+        const newErrors = {};
+        
+        // Validate all fields
+        Object.keys(formData).forEach(field => {
+            const errorMessage = validateField(field, formData[field]);
+            newErrors[field] = errorMessage;
+            if (errorMessage) {
+                formIsValid = false;
+            }
+        });
+        
+        setValidationErrors(newErrors);
+        return formIsValid;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validate all fields before submission
+        if (!validateForm()) {
+            return;
+        }
+        
         setLoading(true);
         setError("");
         
@@ -117,13 +196,16 @@ const Register = () => {
                                 <input
                                     type="text"
                                     name="fullName"
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
+                                    className={`block w-full pl-10 pr-3 py-3 border ${validationErrors.fullName ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm`}
                                     placeholder="Enter your full name"
                                     value={formData.fullName}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
+                            {validationErrors.fullName && (
+                                <p className="mt-1 text-xs text-red-600">{validationErrors.fullName}</p>
+                            )}
                         </motion.div>
 
                         <motion.div 
@@ -144,13 +226,16 @@ const Register = () => {
                                 <input
                                     type="email"
                                     name="email"
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
+                                    className={`block w-full pl-10 pr-3 py-3 border ${validationErrors.email ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm`}
                                     placeholder="Enter your email address"
                                     value={formData.email}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
+                            {validationErrors.email && (
+                                <p className="mt-1 text-xs text-red-600">{validationErrors.email}</p>
+                            )}
                         </motion.div>
 
                         <motion.div 
@@ -170,13 +255,16 @@ const Register = () => {
                                 <input
                                     type="password"
                                     name="password"
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
+                                    className={`block w-full pl-10 pr-3 py-3 border ${validationErrors.password ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm`}
                                     placeholder="Create a strong password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
+                            {validationErrors.password && (
+                                <p className="mt-1 text-xs text-red-600">{validationErrors.password}</p>
+                            )}
                         </motion.div>
 
                         <motion.div 
@@ -195,7 +283,7 @@ const Register = () => {
                                 </div>
                                 <select
                                     name="role"
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm appearance-none bg-none"
+                                    className={`block w-full pl-10 pr-3 py-3 border ${validationErrors.role ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm appearance-none bg-none`}
                                     value={formData.role}
                                     onChange={handleChange}
                                     required
@@ -210,6 +298,9 @@ const Register = () => {
                                     </svg>
                                 </div>
                             </div>
+                            {validationErrors.role && (
+                                <p className="mt-1 text-xs text-red-600">{validationErrors.role}</p>
+                            )}
                         </motion.div>
 
                         <motion.div 
@@ -229,13 +320,16 @@ const Register = () => {
                                 <input
                                     type="tel"
                                     name="contactInfo"
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm"
+                                    className={`block w-full pl-10 pr-3 py-3 border ${validationErrors.contactInfo ? 'border-red-300' : 'border-gray-300'} rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-200 text-sm`}
                                     placeholder="Enter your phone number"
                                     value={formData.contactInfo}
                                     onChange={handleChange}
                                     required
                                 />
                             </div>
+                            {validationErrors.contactInfo && (
+                                <p className="mt-1 text-xs text-red-600">{validationErrors.contactInfo}</p>
+                            )}
                         </motion.div>
 
                         <motion.div
