@@ -1,0 +1,39 @@
+.projects-container {
+    background-color: #f9fafb;
+    background-image: url('https://media-hosting.imagekit.io/09a5236dc5d34c22/project-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+}
+
+.projects-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.9));
+    z-index: -1;
+}
+
+/* Improve card appearance against the background */
+.projects-container .bg-white {
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Make skeleton loading fit in with the background */
+.animate-pulse .bg-gray-200 {
+    background-color: rgba(229, 231, 235, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .projects-container {
+        background-attachment: scroll;
+    }
+} 

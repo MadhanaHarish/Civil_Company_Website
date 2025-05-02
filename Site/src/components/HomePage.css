@@ -3,7 +3,52 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* Ensures the background image stays fixed */
-    height: 100vh; /* Ensures the container takes full viewport height */
-    overflow: auto; /* Allows scrolling within the container */
+    background-attachment: fixed;
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Ensure the container properly holds all content */
+.home-page > div {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Add a subtle overlay for better text readability */
+.home-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3));
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Make content appear above the overlay */
+.home-page > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    .home-page {
+        background-attachment: scroll;
+        padding: 10px;
+    }
+}
+
+/* Fix for iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    .home-page {
+        background-attachment: scroll;
+    }
 }

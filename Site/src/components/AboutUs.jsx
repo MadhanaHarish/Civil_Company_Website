@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import Footer from "./Footer";
 
 const AboutUs = () => {
     const controls = useAnimation();
@@ -53,7 +54,7 @@ const AboutUs = () => {
     };
 
     return (
-        <div className="mt-20 relative overflow-hidden">
+        <div className="relative overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute inset-0 -z-10">
                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50 to-white opacity-30"></div>
@@ -203,85 +204,7 @@ const AboutUs = () => {
                 </div>
             </motion.div>
 
-            {/* Footer */}
-            <motion.footer
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className="bg-gray-100 py-12 mt-12"
-            >
-                <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-                    {/* Company Info */}
-                    <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                    >
-                        <h3 className="text-red-600 font-bold mb-4">LANDMARK CONSTRUCTION</h3>
-                        <p className="text-gray-700 text-sm">
-                            Copyright © 2025 Landmark Construction Company. All rights reserved.
-                        </p>
-                        <p className="text-gray-600 text-xs mt-2">
-                            Landmark Projects, No.55J, Dharapuram Road, Cheran Nagar, Vellakovil-638111,
-                            Kangayam(TK), Tirupur(DT).
-                        </p>
-                    </motion.div>
-
-                    {/* Quick Links */}
-                    <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                    >
-                        <h3 className="text-red-600 font-bold mb-4">QUICK LINKS</h3>
-                        {["Who We Are", "News & Insights", "Contact", "Transparency in Coverage", "Privacy Policy"].map((link, i) => (
-                            <motion.a
-                                key={i}
-                                href="#"
-                                className="text-gray-700 block mb-2 hover:text-red-600 transition-colors"
-                                whileHover={{ x: 5 }}
-                            >
-                                {link}
-                            </motion.a>
-                        ))}
-                    </motion.div>
-
-                    {/* Social Links */}
-                    <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                    >
-                        <h3 className="text-red-600 font-bold mb-4">SOCIAL</h3>
-                        {["LinkedIn", "Instagram", "Facebook"].map((social, i) => (
-                            <motion.a
-                                key={i}
-                                href="#"
-                                className="text-gray-700 block mb-2 hover:text-red-600 transition-colors"
-                                whileHover={{ x: 5 }}
-                            >
-                                {social}
-                            </motion.a>
-                        ))}
-                    </motion.div>
-
-                    {/* Contact Info */}
-                    <motion.div
-                        whileHover={{ scale: 1.02 }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                    >
-                        <h3 className="text-red-600 font-bold mb-4">CONTACT</h3>
-                        {["National Presence", "Media Inquiries"].map((contact, i) => (
-                            <motion.a
-                                key={i}
-                                href="#"
-                                className="text-gray-700 block mb-2 hover:text-red-600 transition-colors"
-                                whileHover={{ x: 5 }}
-                            >
-                                {contact}
-                            </motion.a>
-                        ))}
-                    </motion.div>
-                </div>
-            </motion.footer>
+            <Footer />
         </div>
     );
 }
