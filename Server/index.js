@@ -22,7 +22,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/projects', projectRoutes);
 
 // MongoDB connection
-const uri = 'mongodb://localhost:27017/';
+const uri = "mongodb+srv://madhanaharishjk22cse:abcd@landmarkprojects.y2jjesk.mongodb.net/";
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
