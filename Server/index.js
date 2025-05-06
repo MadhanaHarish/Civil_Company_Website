@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const userRoutes = require('./routes/userRoutes');
-const projectRoutes = require('./routes/projectRoutes');
+const projectRoutes = require('./routes/ProjectRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
