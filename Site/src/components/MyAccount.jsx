@@ -25,7 +25,7 @@ const MyAccount = ({ loggedInEmail, loggedInRole }) => {
             
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:5000/api/users/profile?email=${loggedInEmail}`);
+                const response = await axios.get(`https://civil-company-website.onrender.com/api/users/profile?email=${loggedInEmail}`);
                 setUserData(response.data);
             } catch (error) {
                 console.error('Error fetching user data:', error);
