@@ -59,7 +59,7 @@ const MyAccount = ({ loggedInEmail, loggedInRole }) => {
 
     const handleSaveProfile = async () => {
         try {
-            await axios.post('http://localhost:5000/api/users/update-profile', userData);
+            await axios.post('https://civil-company-website.onrender.com/api/users/update-profile', userData);
             setUpdateMessage('Profile updated successfully!');
             setTimeout(() => setUpdateMessage(''), 3000);
         } catch (error) {
@@ -92,7 +92,7 @@ const MyAccount = ({ loggedInEmail, loggedInRole }) => {
         }
         
         try {
-            const response = await axios.post('http://localhost:5000/api/users/change-password', {
+            const response = await axios.post('https://civil-company-website.onrender.com/api/users/change-password', {
                 email: loggedInEmail,
                 currentPassword: passwordData.currentPassword,
                 newPassword: passwordData.newPassword
