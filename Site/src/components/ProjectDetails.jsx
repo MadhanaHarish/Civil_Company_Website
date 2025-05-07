@@ -27,7 +27,7 @@ const ProjectDetails = ({ loggedInRole }) => {
         const fetchProject = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:5000/api/projects/${id}`);
+                const response = await axios.get(`https://civil-company-website.onrender.com/api/projects/${id}`);
                 setProject(response.data);
                 setFormData({
                     title: response.data.title,
