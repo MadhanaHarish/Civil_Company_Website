@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const userRoutes = require('./routes/userRoutes');
-const projectRoutes = require('./routes/projectRoutes');
+const projectRoutes = require('./routes/ProjectRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,7 +22,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/projects', projectRoutes);
 
 // MongoDB connection
-const uri = 'mongodb://localhost:27017/';
+const uri = "mongodb+srv://madhanaharishjk22cse:abcd@landmarkprojects.y2jjesk.mongodb.net/";
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));

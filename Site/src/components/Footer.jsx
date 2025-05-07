@@ -13,7 +13,14 @@ const Footer = () => {
             <p className="text-gray-300">Copyright © 2025 Landmark Construction Company. All rights reserved.</p>
             <div className="flex items-start space-x-2 text-gray-300">
               <FaMapMarkerAlt className="mt-1 flex-shrink-0 text-red-500" />
-              <p>Landmark Projects, No.55J, Dharapuram Road, Cheran Nagar, Vellakovil-638111, Kangayam(TK), Tirupur(DT).</p>
+              <a
+                  href="https://maps.app.goo.gl/V6Nq7CMkpTxUhSZbA?g_st=aw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline"
+              >
+                Landmark Projects, No.55J, Dharapuram Road, Cheran Nagar, Vellakovil-638111, Kangayam(TK), Tirupur(DT).
+              </a>
             </div>
           </div>
 
@@ -25,16 +32,16 @@ const Footer = () => {
                 <Link to="/about" className="text-gray-300 hover:text-white hover:underline">Who We Are</Link>
               </li>
               <li className="transition-all duration-300 hover:translate-x-2">
-                <Link to="/news" className="text-gray-300 hover:text-white hover:underline">News & Insights</Link>
+                <Link to="/about" className="text-gray-300 hover:text-white hover:underline">News & Insights</Link>
               </li>
-              <li className="transition-all duration-300 hover:translate-x-2">
+              {/*<li className="transition-all duration-300 hover:translate-x-2">
                 <Link to="/contact" className="text-gray-300 hover:text-white hover:underline">Contact</Link>
               </li>
               <li className="transition-all duration-300 hover:translate-x-2">
                 <Link to="/transparency" className="text-gray-300 hover:text-white hover:underline">Transparency in Coverage</Link>
-              </li>
+              </li>*/}
               <li className="transition-all duration-300 hover:translate-x-2">
-                <Link to="/privacy" className="text-gray-300 hover:text-white hover:underline">Privacy Policy</Link>
+                <Link to="/about" className="text-gray-300 hover:text-white hover:underline">Privacy Policy</Link>
               </li>
             </ul>
           </div>
@@ -43,15 +50,15 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-2xl font-bold text-red-500 mb-6">SOCIAL</h3>
             <div className="flex space-x-4">
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" 
+              <a href="https://www.linkedin.com/company/landmarkprojects/?originalSubdomain=uk" target="_blank" rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-blue-700 transition-colors duration-300">
                 <FaLinkedinIn className="text-white" />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" 
+              <a href="https://www.instagram.com/thelandmarkprojects?igsh=cHRmOHU4bmVyeDFh" target="_blank" rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-pink-600 transition-colors duration-300">
                 <FaInstagram className="text-white" />
               </a>
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
+              <a href="https://www.facebook.com/landmarkprojects/" target="_blank" rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-blue-600 transition-colors duration-300">
                 <FaFacebookF className="text-white" />
               </a>
@@ -69,7 +76,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3">
                 <FaEnvelope className="text-red-500" />
-                <p className="text-gray-300">info@landmarkconstructions.com</p>
+                <p className="text-gray-300">selvarajk@gmail.com</p>
               </div>
               <p className="text-gray-300 mt-2">National Presence</p>
               <p className="text-gray-300">Media Inquiries: media@landmarkconstructions.com</p>

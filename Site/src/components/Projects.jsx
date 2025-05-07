@@ -43,7 +43,7 @@ const Projects = ({isLoggedIn, loggedInRole}) => {
         const fetchProjects = async () => {
             setLoading(true);
             try {
-                const response = await axios.get('http://localhost:5000/api/projects');
+                const response = await axios.get('https://civil-company-website.onrender.com/api/projects');
                 setProjects(response.data);
                 setTimeout(() => setLoading(false), 500); // Slight delay for smoother transition
             } catch (error) {
