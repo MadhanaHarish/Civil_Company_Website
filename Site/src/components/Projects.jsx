@@ -73,7 +73,7 @@ const Projects = ({isLoggedIn, loggedInRole}) => {
     const handleFormSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/projects/add', formData);
+            const response = await axios.post('https://civil-company-website.onrender.com/api/projects/add', formData);
             setProjects([...projects, response.data.project]);
             setShowForm(false);
             setFormData({
@@ -100,7 +100,7 @@ const Projects = ({isLoggedIn, loggedInRole}) => {
         event.preventDefault();
         if (deleteData.selectedProject === deleteData.reEnterProjectName) {
             try {
-                await axios.delete(`http://localhost:5000/api/projects/${deleteData.selectedProject}`);
+                await axios.delete(`https://civil-company-website.onrender.com/api/projects/${deleteData.selectedProject}`);
                 setProjects(projects.filter(project => project.title !== deleteData.selectedProject));
                 setShowDeleteForm(false);
                 setDeleteData({

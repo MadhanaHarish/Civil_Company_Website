@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ProjectDetails = ({ loggedInRole }) => {
+const ProjectDetails = ({ loggedInRole, loggedInEmail }) => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [project, setProject] = useState(null);
@@ -62,7 +62,7 @@ const ProjectDetails = ({ loggedInRole }) => {
                 ...formData,
                 pictures: formData.pictures.split(",").map((pic) => pic.trim()),
             };
-            const response = await axios.put(`http://localhost:5000/api/projects/${id}`, updatedData);
+            const response = await axios.put(`https://civil-company-website.onrender.com/api/projects/${id}`, updatedData);
             setProject(response.data.project);
             setIsEditing(false);
             setMessage({ text: "Project updated successfully!", type: "success" });
@@ -302,7 +302,7 @@ const ProjectDetails = ({ loggedInRole }) => {
                                     </motion.div>
                                 )}
 
-                                {loggedInRole === "Team Leader" && (
+                                {loggedInRole === "Team Leader" && loggedInEmail === formData.tlEmail && (
                                     <motion.div variants={itemVariants}>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
                                         <select
@@ -435,7 +435,7 @@ const ProjectDetails = ({ loggedInRole }) => {
                                     </div>
                                 </motion.div>
                                 
-                                {(loggedInRole === "CEO" || loggedInRole === "Team Leader") && (
+                                {(loggedInRole === "CEO" || (loggedInRole === "Team Leader" && loggedInEmail === project.tlEmail)) && (
                                     <motion.div variants={itemVariants} className="mt-8 flex justify-end">
                                         <motion.button
                                             onClick={() => setIsEditing(true)}

@@ -40,7 +40,7 @@ const App = () => {
                             element={<Login setIsLoggedIn={setIsLoggedIn} setLoggedInEmail={setLoggedInEmail} setLoggedInRole={setLoggedInRole} />}
                         />
                         <Route path="/register" element={<Register />} />
-                        <Route path="/projects/:id" element={<ProjectDetails loggedInRole={loggedInRole}/>} />
+                        <Route path="/projects/:id" element={<ProjectDetails loggedInRole={loggedInRole} loggedInEmail={loggedInEmail}/>} />
                         <Route
                             path="/my-account"
                             element={isLoggedIn ? <MyAccount loggedInEmail={loggedInEmail} loggedInRole={loggedInRole} /> : <Navigate to="/login" />}
